@@ -35,18 +35,23 @@
 
     <div class="container">
       <div class="col-sm-8">
+        {%for i in mesg%}
         <div class="no_message">
-          <h1 style='color: #ccc'>No message yet..</h1>
-          <div class="message_holder"></div>
+          <h1 style='color: #ccc'>{{i}}</h1>
+          {%endfor%}
+          {%for user in message%} 
+          <div class="message_holder">
+            <div class="msg_bbl"><b style="color: #000">{{user.username}} </b>{{user.msg}} </div>
+          {%endfor%}
         </div>
       </div>
       <div class="col-sm-4">
-        <form action="" method="POST">
+        <form action="{{url_for('index')}}" method="POST">
           <b>Type your message below <span class="glyphicon glyphicon-arrow-down"></span></b>
           <div class="clearfix" style="margin-top: 5px;"></div>
-          <input type="text" class="username form-control" placeholder="User Name">
+          <input type="text" class="username form-control" placeholder="User Name" name="User">
           <div style="padding-top: 5px;"></div>
-          <input type="text" class="message form-control" placeholder="Messages">
+          <input type="text" class="message form-control" placeholder="Messages" name="msg">
           <div style="padding-top: 5px;"></div>
           <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-send"></span> Send</button>
         </form>
@@ -57,33 +62,5 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-    <script>
-      var socket = io.connect( 'http://' + document.domain + ':' + location.port )
-      // broadcast a message
-      socket.on( 'connect', function() {
-        socket.emit( 'my event', {
-          data: 'User Connected'
-        } )
-        var form = $( 'form' ).on( 'submit', function( e ) {
-          e.preventDefault()
-          let user_name = $( 'input.username' ).val()
-          let user_input = $( 'input.message' ).val()
-          socket.emit( 'my event', {
-            user_name : user_name,
-            message : user_input
-          } )
-          // empty the input field
-          $( 'input.message' ).val( '' ).focus()
-        } )
-      } )
-      // capture message
-      socket.on( 'my response', function( msg ) {
-        console.log( msg )
-        if( typeof msg.user_name !== 'undefined' ) {
-          $( 'h1' ).remove()
-          $( 'div.message_holder' ).append( '<div class="msg_bbl"><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
-        }
-      } )
-    </script>
   </body>
 </html>

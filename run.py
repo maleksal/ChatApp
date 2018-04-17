@@ -1,25 +1,13 @@
-from flask import Flask, render_template
-from flask_socketio import SocketIO, emit
-
-
-
+from flask import Flask, render_template,url_for,redirect,request
+from app import *
 app = Flask(__name__)
-
-app.config[ 'SECRET_KEY' ] = 'jsbcfsbfjefebw237u3gdbdc'
-socketio = SocketIO( app )
-@app.route('/')
+@app.route('/',methods=["GET","POST"])
 def index():
-	return render_template("app.html")
-
-def messageRecived():
-  print( 'message was received!!!' )
-
-@socketio.on( 'my event' )
-def handle_my_custom_event( json ):
-  print( 'recived my event: ' + str( json ) )
-  socketio.emit( 'my response', json, callback=messageRecived )
-
-
+	if request.method == "POST":
+		Data = Database(request.form["User"],request.form["msg"])
+		store = Store(Data)
+		return render_template("app.html",message=store.getall())
+	return render_template("app.html",mesg=["No Message Yet..."])
 
 if __name__ == '__main__':
-  socketio.run( app, debug = True )
+	app.run()
