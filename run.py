@@ -1,8 +1,7 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 
-# https://flask-socketio.readthedocs.io/en/latest/
-# https://github.com/socketio/socket.io-client
+
 
 app = Flask(__name__)
 
